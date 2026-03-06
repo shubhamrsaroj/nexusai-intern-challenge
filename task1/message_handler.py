@@ -13,6 +13,9 @@ import re
 from dataclasses import dataclass
 from typing import Optional
 
+from dotenv import load_dotenv          # pip install python-dotenv
+load_dotenv()                           # reads .env from project root (ignored by git)
+
 from google import genai                        # pip install google-genai
 from google.genai import types
 from google.genai.errors import ClientError     # covers rate-limit (429) errors
