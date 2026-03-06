@@ -21,7 +21,13 @@ from google.genai.errors import ClientError     # covers rate-limit (429) errors
 # Configuration
 # ---------------------------------------------------------------------------
 
-GEMINI_API_KEY  = os.environ.get("GEMINI_API_KEY", "REMOVED_SECRET")
+GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
+    raise EnvironmentError(
+        "GEMINI_API_KEY is not set.\n"
+        "  PowerShell : $env:GEMINI_API_KEY = 'your-key'\n"
+        "  bash/zsh   : export GEMINI_API_KEY='your-key'"
+    )
 GEMINI_MODEL    = "gemini-2.5-flash"
 API_TIMEOUT_SECONDS     = 10
 RATE_LIMIT_RETRY_DELAY  = 2   # seconds to wait before retrying after a 429
