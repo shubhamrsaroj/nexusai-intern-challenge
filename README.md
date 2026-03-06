@@ -8,7 +8,7 @@ A five-task AI/backend engineering challenge demonstrating async Python, Postgre
 
 ```bash
 # 1. Clone the repo
-git clone https://github.com/your-username/nexusai-intern-challenge.git
+git clone https://github.com/shubhamrsaroj/nexusai-intern-challenge.git
 cd nexusai-intern-challenge
 
 # 2. Create and activate virtual environment
@@ -28,14 +28,20 @@ pip install -r requirements.txt
 
 **File:** `task1/message_handler.py`
 
-Set your OpenAI API key first:
+### Set your Gemini API key (choose one method):
 
+**Method A — `.env` file (recommended, persists across sessions):**
 ```bash
-# Windows PowerShell
-$env:OPENAI_API_KEY = "sk-..."
+# Copy the template and fill in your key
+copy .env.example .env
+# Then edit .env and replace "your-gemini-api-key-here" with your real key
 ```
+Get a free key at: https://aistudio.google.com/app/apikey
 
-Or edit the `OPENAI_API_KEY` constant directly in the file.
+**Method B — PowerShell session variable (temporary):**
+```powershell
+$env:GEMINI_API_KEY = "your-key-here"
+```
 
 ```bash
 python task1/message_handler.py
@@ -93,28 +99,30 @@ python task2/repository.py
 python task3/fetcher.py
 ```
 
-### Timing output (example run):
+### Timing output (actual run):
 
 ```
 ============================================================
 SEQUENTIAL FETCH
 ============================================================
-  CRM fetch done in 312 ms
-  Billing fetch done in 278 ms
-  Ticket history fetch done in 189 ms
+2026-03-06 [INFO] CRM fetch done in 364 ms
+2026-03-06 [INFO] Billing fetch done in 207 ms
+2026-03-06 [INFO] Ticket history fetch done in 107 ms
   data_complete : True
-  ⏱  Total time : 779 ms
+  warnings      : []
+  Total time    : 704 ms
 
 ============================================================
 PARALLEL FETCH
 ============================================================
-  CRM fetch done in 312 ms
-  Billing fetch done in 278 ms
-  Ticket history fetch done in 189 ms
-  data_complete : True
-  ⏱  Total time : 318 ms
+2026-03-06 [INFO] Ticket history fetch done in 229 ms
+2026-03-06 [INFO] CRM fetch done in 283 ms
+2026-03-06 [WARNING] Billing fetch failed: Billing service timed out (simulated)
+  data_complete : False
+  warnings      : ['billing_timeout: Billing service timed out (simulated)']
+  Total time    : 296 ms
 
-  🚀 Speed-up   : 2.45× faster with parallel fetch
+  >> Speed-up   : 2.38x faster with parallel fetch
 ```
 
 **Why it matters:** Real customer calls have a 6–8 second patience window. Sequential fetching (~700ms each source) would alone consume 2+ seconds before the AI can respond. Parallel fetching collapses this to the time of the slowest single source.
@@ -166,17 +174,19 @@ See [`ANSWERS.md`](./ANSWERS.md) at the project root.
 
 ```
 nexusai-intern-challenge/
-├── ANSWERS.md              # Task 5 design questions
+├── ANSWERS.md              # Task 5 written design questions
 ├── README.md               # This file
-├── requirements.txt
+├── requirements.txt        # All dependencies
+├── .env.example            # API key template (copy to .env and fill in)
+├── .gitignore
 ├── task1/
-│   └── message_handler.py  # Async AI handler + MessageResponse dataclass
+│   └── message_handler.py  # Async Gemini handler + MessageResponse dataclass
 ├── task2/
 │   ├── schema.sql          # PostgreSQL CREATE TABLE + indexes + constraints
-│   └── repository.py       # CallRecordRepository (asyncpg)
+│   └── repository.py       # CallRecordRepository (asyncpg, dry-run demo)
 ├── task3/
 │   └── fetcher.py          # Parallel vs sequential fetch + CustomerContext
 └── task4/
-    ├── escalation.py       # should_escalate() — 6 rules
-    └── test_escalation.py  # 8 pytest test cases
+    ├── escalation.py       # should_escalate() — 6 escalation rules
+    └── test_escalation.py  # 11 pytest test cases
 ```
